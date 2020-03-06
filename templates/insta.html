@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        img{
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+    </style>
+    <meta charset="UTF-8">
+    <link rel="icon" href="https://pluspng.com/img-png/instagram-png-instagram-png-logo-1455.png" type="image/icon type">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="{{ url_for('static', filename='css/insta.css')}}" rel="stylesheet" />
+    <title>Instagram</title>
+</head>
+<body>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/800px-Instagram_logo.svg.png" alt="logo" height="60px" width="200px">
+    <br>
+    <br>
+    <button style="margin-left: 10px;" type="button" class="btn btn-primary" onclick="window.location.href = 'index.html';">Go back to home</button>
+    <br>
+    <br>
+    <h1 style="margin-left: 10px;">Showing results for "{{data[0]}}"</h1>
+    
+    <table>
+        <tr>
+            <td>
+                {%for image in data[1:]:%}
+                    <img src="{{image}}" alt="image" height="350px" width="350px">
+                {% endfor %}
+            </td>
+        </tr>
+    </table>
+
+    
+</body>
+</html>
