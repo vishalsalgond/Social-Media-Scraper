@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body{
+            display: table;
+            margin: auto;
+        }
+    </style>
+    <link rel="icon" href="{{ url_for('static', filename='images/fb.png')}}" type="image/icon type">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook</title>
+</head>
+<body>
+    <img src="{{ url_for('static', filename='images/fb-logo.png')}}" alt="logo" height="60px" width="300px">
+    <br>
+    <br>
+    <h1>Showing results for {{data[0]}}</h1>
+    <br>
+    <script async defer src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2"></script> 
+    {% for element in data[1:]: %} 
+    <br>
+    <div class="fb-post" 
+      data-href="{{element}}"
+      data-width="500" data-height="500" ></div>
+    {% endfor %}
+</body>
+</html>

@@ -42,8 +42,14 @@ def index():
         # # Step 2) Navigate to Facebook
         
         final = []
-
+        newlink1 = []
         for element in newlink:
+            y = re.search(".*[0-9]$", element)
+            if (y):
+                if "=" not in element and "?" not in element and "_" not in element:
+                    newlink1.append(element)
+
+        for element in newlink1:
             try:
                 url1 = 'https://publish.twitter.com/?query=' + element + '&widget=Tweet'
                 browser.get(url1)
@@ -54,8 +60,21 @@ def index():
             except:
                 pass
 
+        print(newlink1)
 
-        return render_template('twitter.html', data=final)
+        f = open("templates/twitter.html", "w", encoding='utf-8')
+        f.write('<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><style>body{display: table;margin: auto;}</style><link rel="icon" href="https://cdn0.iconfinder.com/data/icons/social-flat-rounded-rects/512/twitter-512.png" type="image/icon type"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Twitter</title></head><body>')
+        f.write('<img src="{{ url_for("static", filename="images/twitter-logo.png")}}" alt="logo" height="60px" width="200px"><br>')
+        f.write("<h1>Showing results for " + query + "</h1>")
+        for element in final:
+            f.write(element)
+            f.write("<br>")
+        f.write("</body></html>")
+        f.close()
+
+        browser.quit()
+
+        return render_template('twitter.html')
 
 
 
@@ -91,24 +110,39 @@ def index():
         username = browser.find_element_by_id("email")
         password = browser.find_element_by_id("pass")
         submit   = browser.find_element_by_id("loginbutton")
-        username.send_keys("vssalgond@yahoo.com")
-        password.send_keys("Vishal@27")
+        username.send_keys("facia.helman@gmail.com")
+        password.send_keys("facebook@123")
         # Step 4) Click Login
         submit.click()
-
         query = request.form['query']
 
-        url = "https://www.facebook.com/search/posts/?q=%23" + query
+        url = "https://www.facebook.com/search/posts/?q=%23" + query + "&epa=SERP_TAB"
         browser.get(url)
-        #browser.find_element_by_xpath('//a[@class="_6ojs"]').click()
+        # browser.find_element_by_xpath('//a[@class="_6ojs"]').click()
+        # browser.implicitly_wait(10)
 
+        #temp = browser.find_elements_by_xpath("//div[contains(concat(' ', normalize-space(@class), ' '), 'KL4Bh')]")
+        temp = browser.find_elements_by_xpath('//a')
+        
+        link = []
+        newlink = []
+        for element in temp:
+            link.append(str(element.get_attribute("href")))
 
-        #elements = browser.findElements(By.className("_6-cm"))
-        text = browser.find_element_by_xpath('//div[@class="_1qkq _1qkx"]')
+        #print(link)
 
-        #text = browser.find_element_by_xpath('//div[@class="_6-cp"]')
+        for element in link:
+            try:
+                if "posts" in element and "#" not in element and "=" not in element:
+                    newlink.append(element)
+            except:
+                pass
 
-        return(text.text)
+        newlink = list(set(newlink))
+        newlink.insert(0,query)
+        browser.quit()
+        #print(newlink)
+        return render_template('facebook.html', data = newlink)
     
     elif (request.method == 'POST' and request.form.get('choices-single-default')=='Instagram'):
 
@@ -129,6 +163,7 @@ def index():
         for element in temp:
             link.append(element.get_attribute("src"))
 
+        browser.quit()
         return render_template('insta.html', data = link)
                 
     else:
