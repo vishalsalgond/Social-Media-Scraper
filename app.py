@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.firefox.options import Options
 import re
 
 app = Flask(__name__)
@@ -37,8 +38,11 @@ def index():
                 newlink.append(element)
 
         newlink = list(set(newlink))
-
-        browser = webdriver.Firefox()
+        options = Options()
+        options.headless = True
+        options.add_argument('--disable-gpu')
+        options.add_argument('--no-sandbox')
+        browser = webdriver.Firefox(options=options)
         # # Step 2) Navigate to Facebook
         
         final = []
@@ -60,8 +64,6 @@ def index():
             except:
                 pass
 
-        print(newlink1)
-
         f = open("templates/twitter.html", "w", encoding='utf-8')
         f.write('<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><style>body{display: table;margin: auto;}</style><link rel="icon" href="https://cdn0.iconfinder.com/data/icons/social-flat-rounded-rects/512/twitter-512.png" type="image/icon type"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Twitter</title></head><body>')
         f.write('<img src="{{ url_for("static", filename="images/twitter-logo.png")}}" alt="logo" height="60px" width="200px"><br>')
@@ -78,50 +80,28 @@ def index():
 
 
 
-
-        # url = 'https://mobile.twitter.com/hashtag/' + query
-        # page = requests.get(url)
-
-        # soup = BeautifulSoup(page.text, 'html.parser')
-
-        # tweet = []
-        # username = []
-
-        # for tag in soup.find_all('div', {'class':'tweet-text'}):
-        #     tweet.append(tag.text)
-
-        # for tag in soup.find_all('div', {'class':'username'}):
-        #     username.append(tag.text)
-
-        # username = username[:len(tweet)]
-        # dict1 = {}
-        # for i in range(len(tweet)):
-        #     dict1.update({username[i]: tweet[i]})
-        #         #return username[i], tweet[i]
-        # return render_template('twitter.html', data=dict1)
-
-
     elif (request.method == 'POST' and request.form.get('choices-single-default')=='Facebook'):
-        # Step 1) Open Firefox 
-        browser = webdriver.Firefox()
-        # Step 2) Navigate to Facebook
+
+        options = Options()
+        options.headless = True
+        options.add_argument('--disable-gpu')
+        options.add_argument('--no-sandbox')
+        browser = webdriver.Firefox(options=options)
+
         browser.get("http://www.facebook.com")
-        # Step 3) Search & Enter the Email or Phone field & Enter Password
+ 
         username = browser.find_element_by_id("email")
         password = browser.find_element_by_id("pass")
         submit   = browser.find_element_by_id("loginbutton")
         username.send_keys("facia.helman@gmail.com")
         password.send_keys("facebook@123")
-        # Step 4) Click Login
+ 
         submit.click()
         query = request.form['query']
 
         url = "https://www.facebook.com/search/posts/?q=%23" + query + "&epa=SERP_TAB"
         browser.get(url)
-        # browser.find_element_by_xpath('//a[@class="_6ojs"]').click()
-        # browser.implicitly_wait(10)
 
-        #temp = browser.find_elements_by_xpath("//div[contains(concat(' ', normalize-space(@class), ' '), 'KL4Bh')]")
         temp = browser.find_elements_by_xpath('//a')
         
         link = []
@@ -129,7 +109,6 @@ def index():
         for element in temp:
             link.append(str(element.get_attribute("href")))
 
-        #print(link)
 
         for element in link:
             try:
@@ -146,8 +125,11 @@ def index():
     
     elif (request.method == 'POST' and request.form.get('choices-single-default')=='Instagram'):
 
-        #from firebase import firebase
-        browser = webdriver.Firefox()
+        options = Options()
+        options.headless = True
+        options.add_argument('--disable-gpu')
+        options.add_argument('--no-sandbox')
+        browser = webdriver.Firefox(options=options)
         query = request.form['query']
 
         url = "https://www.instagram.com/explore/tags/" + query + "/top/"
